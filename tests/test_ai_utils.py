@@ -33,7 +33,7 @@ def test_ai_provider_invalid_model():
             AIProvider(provider='mistral', model='invalid-model')
         assert 'Invalid model' in str(exc_info.value)
 
-@patch('mistralai.client.MistralClient.list_models')
+@patch('mistralai.client.models_.Models.list')
 def test_fetch_mistral_models(mock_list):
     """Test fetching Mistral models."""
     mock_response = MagicMock()
@@ -49,7 +49,7 @@ def test_fetch_mistral_models(mock_list):
     assert 'mistral-large-latest' in models
     assert 'mistral-medium-latest' in models
 
-@patch('mistralai.client.MistralClient.list_models')
+@patch('mistralai.client.models_.Models.list')
 def test_fallback_models(mock_list):
     """Test fallback model handling when API is unavailable."""
     # Simulate API error
@@ -66,7 +66,7 @@ def test_fallback_models(mock_list):
     assert 'mistral-medium-latest' in models
     assert 'mistral-small-latest' in models
 
-@patch('mistralai.client.MistralClient.chat')
+@patch('mistralai.client.chat.Chat.complete')
 def test_optimize_resume_mistral(mock_chat, sample_resume):
     """Test resume optimization with Mistral."""
     mock_response = MagicMock()
@@ -101,7 +101,7 @@ def test_optimize_resume_with_custom_prompt():
         )
         assert "Optimized content" in result
 
-@patch('mistralai.client.MistralClient.chat')
+@patch('mistralai.client.chat.Chat.complete')
 def test_optimize_resume_api_error(mock_chat):
     """Test error handling for AI API failures."""
     mock_chat.side_effect = Exception("API Error")

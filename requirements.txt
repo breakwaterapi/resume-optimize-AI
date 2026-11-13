@@ -5,4 +5,4 @@ requests==2.31.0
 python-jose==3.3.0
 anthropic==0.18.1
 openai==1.13.3
-mistralai>=2,<3
+mistralai>=2,<4

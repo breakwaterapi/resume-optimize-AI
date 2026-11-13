@@ -1,8 +1,7 @@
 from typing import Optional, List, Dict
 import anthropic
 import openai
-from mistralai.client import MistralClient
-from mistralai.models.chat_completion import ChatMessage
+from mistralai.client import Mistral
 from config import Config
 import logging
 
@@ -34,7 +33,7 @@ class AIProvider:
         elif self.provider == 'anthropic':
             self.client = anthropic.Anthropic(api_key=Config.ANTHROPIC_API_KEY)
         elif self.provider == 'mistral':
-            self.client = MistralClient(api_key=Config.MISTRAL_API_KEY)
+            self.client = Mistral(api_key=Config.MISTRAL_API_KEY)
         else:
             raise ValueError(f"Unsupported AI provider: {self.provider}")
 
@@ -59,7 +58,7 @@ class AIProvider:
 
             elif self.provider == 'mistral':
                 # Use Mistral's models endpoint
-                response = self.client.list_models()
+                response = self.client.models.list()
                 models = [model.id for model in response.data]
                 logger.info(f"Fetched Mistral models: {models}")
                 return models
@@ -163,10 +162,10 @@ class AIProvider:
 
             elif self.provider == 'mistral':
                 messages = [
-                    ChatMessage(role="system", content="You are a professional resume optimization assistant."),
-                    ChatMessage(role="user", content=base_prompt)
+                    {"role": "system", "content": "You are a professional resume optimization assistant."},
+                    {"role": "user", "content": base_prompt}
                 ]
-                response = self.client.chat(
+                response = self.client.chat.complete(
                     model=self.model,
                     messages=messages,
                     temperature=0.7
